@@ -86,19 +86,24 @@ plt.ylim(yStart,yEnd)
 plt.streamplot(X,Y,uPair,vPair,density=2.0,linewidth=1,arrowsize=2,arrowstyle='->')
 plt.scatter([xSource,xSink],[ySource,ySink],c='#CD2305',s=80,marker='o')
 
-
+ # challenge question
  # Contour plot of potential
    
+potentialsource = np.empty_like(uPair)
+potentialsink = np.empty_like(uPair)
 potential = np.empty_like(uPair)
 
-potential = uPair*X + vPair*Y
+potentialsource = strengthSource/(2*pi)*np.log(np.sqrt((X-xSource)**2+(Y-ySource)**2))
+potentialsink = strengthSink/(2*pi)*np.log(np.sqrt((X-xSink)**2+(Y-ySink)**2))
+potential = potentialsource + potentialsink
+
 
 plt.figure(figsize=(size,(yEnd-yStart)/(xEnd-xStart)*size))
 plt.xlabel('x',fontsize=16)
 plt.ylabel('y',fontsize=16)
 plt.xlim(xStart,xEnd)
 plt.ylim(yStart,yEnd)
-plt.contour(X,Y,potential)
-plt.scatter([xSource,xSink],[ySource,ySink],c='#CD2305',s=80,marker='o')
+plt.contourf(X,Y,potential,levels=np.linspace(-2.0,2.0,100),extend='both')
+plt.scatter([xSource,xSink],[ySource,ySink],c='black',s=80,marker='o')
             
 plt.show()

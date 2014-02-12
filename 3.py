@@ -68,6 +68,9 @@ xStagn1,yStagn1 = sqrt(kappa/(2*pi*Uinf)),0
 xStagn2,yStagn2 = -sqrt(kappa/(2*pi*Uinf)),0
 plt.scatter([xStagn1,xStagn2],[yStagn1,yStagn2],c='black',s=80,marker='o');
 
+# challenge question
+# radius = sqrt(kappa/(2*pi*Uinf))
+
 #compute the pressure coefficient
 
 Cp = 1.0-(u**2+v**2)/Uinf**2
@@ -86,5 +89,17 @@ cbar.set_ticks([-2.0,-1.0,0.0,1.0])
 plt.scatter(xDoublet,yDoublet,c='yellow',s=80,marker='o')
 plt.contour(X,Y,psi,levels=[0,0],color='#CD2305',linewidths=2,linestyle='--')
 plt.scatter([xStagn1,xStagn2],[yStagn1,yStagn2],c='black',s=80,marker='o');
+
+# challenge task
+#stream function after superposition
+# Fai = Uinf*r*sin(Theta)*(1-kappa/(2*pi*Uinf*r**2))
+#Ur = Uinf*sin(Theta)*(1-kappa/(2*pi*Uinf*r**2))
+#Ut = Uinf*cos(Theta)*(1-kappa/(2*pi*Uinf*r**2))
+#if r=R
+#Ur = 0
+#Ut = -2*Uinf*sin(Theta)
+# p = pinf+1/2*rho*Uinf**2*(1-4*sin(Theta)**2)
+#Cp = (p-pinf)/(1/2*rho*Uinf**2) = 1-4*sin(Theta)**2
+
 
 plt.show()
