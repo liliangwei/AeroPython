@@ -51,8 +51,7 @@ plt.ylabel('y',fontsize=16)
 plt.xlim(xStart,xEnd)
 plt.ylim(yStart,yEnd)
 plt.streamplot(X,Y,u,v,density=2.0,linewidth=1,arrowsize=1,arrowstyle='->')
-for i in range(vnumber):
-    plt.scatter(xvortex[i],yvortex[i],c='yellow',s=80,marker='o');
+plt.scatter(xvortex,yvortex,c='yellow',s=80,marker='o');
     
 #---------infinite number of vortex-------------------------------------------
 
@@ -73,10 +72,8 @@ plt.ylabel('y',fontsize=16)
 plt.xlim(xStart,xEnd)
 plt.ylim(yStart,yEnd)
 plt.streamplot(X,Y,inuVortex,invVortex,density=2.0,linewidth=1,arrowsize=1,arrowstyle='->')
-for i in range(vnumber):
-    plt.scatter(xvortex[i],yvortex[i],c='yellow',s=80,marker='o');
+plt.scatter(xvortex,yvortex,c='yellow',s=80,marker='o');
 
     
 
 plt.show()
-    
