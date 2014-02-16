@@ -53,17 +53,19 @@ plt.ylim(yStart,yEnd)
 plt.streamplot(X,Y,u,v,density=2.0,linewidth=1,arrowsize=1,arrowstyle='->')
 plt.scatter(xvortex,yvortex,c='yellow',s=80,marker='o');
     
+
+
 #---------infinite number of vortex-------------------------------------------
 
 
 def getInfiniteVelocity(strength,a,X,Y):
-    u = strength/(2*pi)*np.sinh(2*pi*Y/a)/(np.cosh(2*pi*Y/a)-np.cos(2*pi*X/a))
-    v = -strength/(2*pi)*np.sin(2*pi*Y/a)/(np.cosh(2*pi*Y/a)-np.cos(2*pi*X/a))
+    u = strength/(2*a)*np.sinh(2*pi*Y/a)/(np.cosh(2*pi*Y/a)-np.cos(2*pi*X/a))
+    v = -strength/(2*a)*np.sin(2*pi*X/a)/(np.cosh(2*pi*Y/a)-np.cos(2*pi*X/a))
     return u,v
 
-
 inuVortex,invVortex = getInfiniteVelocity(gamma,length,X,Y)
-    
+
+
 # plotting
 size = 10
 plt.figure(figsize=(size,(yEnd-yStart)/(xEnd-xStart)*size))
