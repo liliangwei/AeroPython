@@ -112,9 +112,26 @@ plt.xlabel(r'$\theta$',fontsize=18)
 plt.ylabel(r'$C_p$',fontsize=18)
 plt.xlim(theta.min(),theta.max())
 plt.plot(theta,Cp,color='r',linewidth=2,linestyle='-')
-plt.plot(theta,Cp_noVortex,color='blue',linewidth=2,linestyle='-')
+plt.plot(theta,Cp_noVortex,color='blue',linewidth=2,linestyle='--')
 plt.legend(['with vortex','without vortex'],loc='best',prop={'size':16})
 
+# Lift and Drag
+
+#drag = -np.sin(theta)*R*0.5*(Uinf**2-utheta**2)
+#lift = np.cos(theta)*R*0.5*(Uinf**2-utheta**2)
+
+drag = -(Cp*0.5*Uinf**2)*np.sin(theta)*R
+lift = (0.5*Cp*Uinf**2)*np.cos(theta)*R
+
+size=6
+plt.figure(figsize=(size,size))
+plt.grid(True)
+plt.xlabel(r'$\theta$',fontsize=18)
+plt.ylabel(r'$Force$',fontsize=18)
+plt.xlim(theta.min(),theta.max())
+plt.plot(theta,drag,color='r',linewidth=2,linestyle='-')
+plt.plot(theta,lift,color='blue',linewidth=2,linestyle='--')
+plt.legend(['Drag','lift'],loc='best',prop={'size':16})
 
 
 plt.show()
