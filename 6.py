@@ -56,7 +56,7 @@ xStagn2,yStagn2 = -sqrt(kappa/(2*pi*Uinf)),0
 plt.scatter([xStagn1,xStagn2],[yStagn1,yStagn2],c='black',s=80,marker='o');
 
 #Vortex
-gamma = 4.0
+gamma = 3.0
 xVortex,yVortex = 0.0,0.0
 
 def getVelocityVortex(strength,xv,yv,X,Y):
@@ -78,6 +78,7 @@ psi = psiFreestream+psiDoublet+psiVortex
 
 #cyliner radius
 R = sqrt(kappa/(2*pi*Uinf))
+
 #stagnation points
 xStagn1,yStagn1 = sqrt(R**2-(gamma/(4*pi*Uinf))**2),-gamma/(4*pi*Uinf)
 xStagn2,yStagn2 = -sqrt(R**2-(gamma/(4*pi*Uinf))**2),-gamma/(4*pi*Uinf)
@@ -117,11 +118,15 @@ plt.legend(['with vortex','without vortex'],loc='best',prop={'size':16})
 
 # Lift and Drag
 
-#drag = -np.sin(theta)*R*0.5*(Uinf**2-utheta**2)
-#lift = np.cos(theta)*R*0.5*(Uinf**2-utheta**2)
+#Without vertex
+#drag = -(1./3.)*np.sin(3.*theta)*0.5*R*Uinf**2
+#lift = (1./3.)*(np.cos(3.*theta)-6.*np.cos(theta))*0.5*R*Uinf**2
 
-drag = -(Cp*0.5*Uinf**2)*np.sin(theta)*R
-lift = (0.5*Cp*Uinf**2)*np.cos(theta)*R
+#With vortex
+x_c = gamma/2/pi/R
+
+drag = 4/3*(np.sin(theta))**3+0.2*np.sin(theta)-x_c*(np.cos(theta))**2*R*.5
+lift = (x_c*theta-.5*np.sin(2.*theta)-3.2*np.cos(theta)+1/3*np.cos(3.*theta))*R*.5
 
 size=6
 plt.figure(figsize=(size,size))
@@ -132,6 +137,5 @@ plt.xlim(theta.min(),theta.max())
 plt.plot(theta,drag,color='r',linewidth=2,linestyle='-')
 plt.plot(theta,lift,color='blue',linewidth=2,linestyle='--')
 plt.legend(['Drag','lift'],loc='best',prop={'size':16})
-
 
 plt.show()
