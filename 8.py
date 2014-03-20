@@ -104,7 +104,7 @@ plt.xlim(xStart,xEnd)
 plt.ylim(yStart,yEnd)
 plt.streamplot(X,Y,u,v,density=3,linewidth=1,arrowsize=1,arrowstyle='->')
 plt.axvline(0.0,(ymin-yStart)/(yEnd-yStart),(ymax-yStart)/(yEnd-yStart),c='r',linewidth=4)
-cont = plt.contourf(X,Y,np.sqrt(u2**2+v2**2),levels= np.linspace(0.0,0.1,10))
+cont = plt.contourf(X,Y,np.sqrt(u2**2+v2**2),levels= np.linspace(0.0,2.0,10))
 cbar = plt.colorbar(cont)
 cbar.set_label('U',fontsize=16);
 
