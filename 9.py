@@ -12,14 +12,14 @@ xCylinder,yCylinder = R*np.cos(theta),R*np.sin(theta)
 # plotting
 #%matplotlib inline
 
-size = 4
+'''size = 4
 plt.figure(num=None,figsize=(size,size))
 plt.grid(True)
 plt.xlabel('x',fontsize=16)
 plt.ylabel('y',fontsize=16)
 plt.plot(xCylinder,yCylinder,c='b',ls='-',lw=2)
 plt.xlim(-1.1,1.1)
-plt.ylim(-1.1,1.1);
+plt.ylim(-1.1,1.1);'''
 
 class Panel:
     def __init__(self,xa,ya,xb,yb):
@@ -45,7 +45,7 @@ yb = R*np.sin(np.linspace(0,2*pi,Np+1))
 panel = np.empty(Np,dtype = object)
 for i in range(Np):
     panel[i] = Panel(xb[i],yb[i],xb[i+1],yb[i+1])
-
+'''
 size = 6
 plt.figure(num = None,figsize=(size,size))
 plt.grid(True)
@@ -58,7 +58,7 @@ plt.scatter([p.xc for p in panel],[p.yc for p in panel],c='k',s=40,zorder=3)
 plt.legend(['cylinder','panels','end points','center points'],loc='best',prop={'size':16})
 plt.xlim(-1.1,1.1)
 plt.ylim(-1.1,1.1);
-    
+ '''   
 # function to evaluate the integral
 def I(pi,pj):
     def func(s):
@@ -124,5 +124,35 @@ plt.ylim(-4.0,2.0);
 # Challenge task
 # Derive the velocity and plot
 
+# Define mesh grid
+N = 500
+xStart,xEnd = -5.0,5.0
+yStart,yEnd = -5.0,5.0
+x = np.linspace(xStart,xEnd,N)
+y = np.linspace(yStart,yEnd,N)
+X,Y = np.meshgrid(x,y)
+
+uFreestream = Uinf*np.ones((N,N),dtype=float)
+vFreestream = Uinf*np.zeros((N,N),dtype=float)
+
+# Calculate the velocity
+
+def K(xci,yci,pj,dx,dy):
+    def func(s):
+        return (+(xci-(pj.xa-sin(pj.beta)*s))*dx\
+                +(yci-(pj.ya+cos(pj.beta)*s))*dy)\
+                /((xci-(pj.xa-sin(pj.beta)*s))**2\
+                +(yci-(pj.ya+cos(pj.beta)*s))**2)
+    return integrate.quad(lambda s:func(s),0,pj.length)[0]
+
+def getVelocity(panel,gamma,X,Y):
+    u,v = np.empty((N,N),dtype=float),np.empty((N,N),dtype = float)
+    for i in range(N):
+        for j in range(N):
+            u[i,j] = Uinf + 0.5/pi*sum([p.sigma*K(X[i,j],Y[i,j],p,1,0) for p in panel])
+            v[i,j] = 0.5/pi*sum([p.sigma*K(X[i,j],Y[i,j],p,0,1) for p in panel])
+    return u,v
+    
+u,v = getVelocity(panel,sigma,X,Y)
 
 plt.show()
