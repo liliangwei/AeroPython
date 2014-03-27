@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from scipy import integrate
 from math import *
 
-Uinf = 1.0
+Uinf = 0.1
 
 R = 1.0
 theta = np.linspace(0,2*pi,100)
@@ -45,7 +45,7 @@ yb = R*np.sin(np.linspace(0,2*pi,Np+1))
 panel = np.empty(Np,dtype = object)
 for i in range(Np):
     panel[i] = Panel(xb[i],yb[i],xb[i+1],yb[i+1])
-'''
+
 size = 6
 plt.figure(num = None,figsize=(size,size))
 plt.grid(True)
@@ -58,7 +58,7 @@ plt.scatter([p.xc for p in panel],[p.yc for p in panel],c='k',s=40,zorder=3)
 plt.legend(['cylinder','panels','end points','center points'],loc='best',prop={'size':16})
 plt.xlim(-1.1,1.1)
 plt.ylim(-1.1,1.1);
- '''   
+   
 # function to evaluate the integral
 def I(pi,pj):
     def func(s):
@@ -110,6 +110,7 @@ for i in range(Np):
      panel[i].Cp = 1-(panel[i].Vt/Uinf)**2
 
 #plotting the coefficient
+
 plt.figure(figsize=(10,6))
 plt.grid(True)
 plt.xlabel('x',fontsize=16)
@@ -124,17 +125,6 @@ plt.ylim(-4.0,2.0);
 # Challenge task
 # Derive the velocity and plot
 
-# Define mesh grid
-N = 500
-xStart,xEnd = -5.0,5.0
-yStart,yEnd = -5.0,5.0
-x = np.linspace(xStart,xEnd,N)
-y = np.linspace(yStart,yEnd,N)
-X,Y = np.meshgrid(x,y)
-
-uFreestream = Uinf*np.ones((N,N),dtype=float)
-vFreestream = Uinf*np.zeros((N,N),dtype=float)
-
 # Calculate the velocity
 
 def K(xci,yci,pj,dx,dy):
@@ -145,14 +135,37 @@ def K(xci,yci,pj,dx,dy):
                 +(yci-(pj.ya+cos(pj.beta)*s))**2)
     return integrate.quad(lambda s:func(s),0,pj.length)[0]
 
-def getVelocity(panel,gamma,X,Y):
-    u,v = np.empty((N,N),dtype=float),np.empty((N,N),dtype = float)
-    for i in range(N):
-        for j in range(N):
+def getVelocity(panel,X,Y):
+    Nx,Ny = X.shape
+    u,v = np.empty((Nx,Ny),dtype=float),np.empty((Nx,Ny),dtype = float)
+    for i in range(Nx):
+        for j in range(Ny):
             u[i,j] = Uinf + 0.5/pi*sum([p.sigma*K(X[i,j],Y[i,j],p,1,0) for p in panel])
             v[i,j] = 0.5/pi*sum([p.sigma*K(X[i,j],Y[i,j],p,0,1) for p in panel])
     return u,v
-    
-u,v = getVelocity(panel,sigma,X,Y)
+
+# Define mesh grid
+Nx,Ny=40,40
+valX,valY = 1.0,1.0
+xmin,xmax = min([p.xa for p in panel]),max([p.xa for p in panel])
+ymin,ymax = min([p.xa for p in panel]),max([p.ya for p in panel])
+xStart,xEnd = xmin-valX*(xmax-xmin),xmax+valX*(xmax-xmin)
+yStart,yEnd = ymin-valY*(ymax-ymin),ymax+valY*(ymax-ymin)
+X,Y = np.meshgrid(np.linspace(xStart,xEnd,Nx),np.linspace(yStart,yEnd,Ny))
+
+# get the velocity field
+u,v = getVelocity(panel,X,Y)
+
+# plot the streamline pass cylinder
+size = 12
+plt.figure(figsize=(size,(yEnd-yStart)/(xEnd-xStart)*size))
+plt.xlabel('x',fontsize=16)
+plt.ylabel('y',fontsize=16)
+plt.streamplot(X,Y,u,v,density=2,linewidth=1,arrowsize=1,arrowstyle='->')
+plt.fill([p.xa for p in panel],[p.ya for p in panel],'ko-',linewidth=2,zorder=2)
+plt.xlim(xStart,xEnd)
+plt.ylim(yStart,yEnd)
+plt.title('Contour of velocity field');
+
 
 plt.show()
