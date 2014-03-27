@@ -157,7 +157,7 @@ X,Y = np.meshgrid(np.linspace(xStart,xEnd,Nx),np.linspace(yStart,yEnd,Ny))
 u,v = getVelocity(panel,X,Y)
 
 # plot the streamline pass cylinder
-size = 12
+size = 10
 plt.figure(figsize=(size,(yEnd-yStart)/(xEnd-xStart)*size))
 plt.xlabel('x',fontsize=16)
 plt.ylabel('y',fontsize=16)
