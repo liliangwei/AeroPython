@@ -6,7 +6,8 @@ from scipy import integrate
 from math import *
 
 # read input geometry
-coords = np.loadtxt(fname='/home/starson/AeroPython/resources/n0012.dat')
+#coords = np.loadtxt(fname='/home/starson/AeroPython/resources/n0012.dat')
+coords = np.loadtxt(fname='C:/Users/llwei89/Documents/Github/AeroPython/resources/n0012.dat')
 xp,yp = coords[:,0],coords[:,1]
 
 # plotting the geometry
