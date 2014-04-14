@@ -6,8 +6,8 @@ from scipy import integrate
 from math import *
 
 # read input geometry
-#coords = np.loadtxt(fname='/home/starson/AeroPython/resources/n0012.dat')
-coords = np.loadtxt(fname='C:/Users/llwei89/Documents/Github/AeroPython/resources/n0012.dat')
+coords = np.loadtxt(fname='/home/starson/AeroPython/resources/n0012.dat')
+#coords = np.loadtxt(fname='C:/Users/llwei89/Documents/Github/AeroPython/resources/n0012.dat')
 xp,yp = coords[:,0],coords[:,1]
 
 # plotting the geometry
@@ -102,7 +102,7 @@ class Freestream:
         self.alpha = alpha*pi/180
 
 Uinf = 1.
-alpha = 5.
+alpha = 0.
 freestream = Freestream(Uinf,alpha)
 
 # Using boundary condition to evaluate Iij(zi)
@@ -216,7 +216,7 @@ size=10
 plt.figure(figsize=(size,(yEnd-yStart)/(xEnd-xStart)*size))
 plt.xlabel('x',fontsize=16)
 plt.ylabel('y',fontsize=16)
-plt.streamplot(X,Y,u,v,density=1,linewidth=1,arrowsize=1,arrowstyle='->')
+plt.streamplot(X,Y,u,v,density=2,linewidth=1,arrowsize=1,arrowstyle='->')
 plt.fill([p.xa for p in panel],[p.ya for p in panel],'ko-',linewidth=2,zorder=2)
 plt.xlim(xStart,xEnd)
 plt.ylim(yStart,yEnd)
