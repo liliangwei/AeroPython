@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from scipy import integrate
 from math import *
 
-Uinf = 0.1
+Uinf = 0.01
 
 R = 1.0
 theta = np.linspace(0,2*pi,100)
@@ -140,12 +140,12 @@ def getVelocity(panel,X,Y):
     u,v = np.empty((Nx,Ny),dtype=float),np.empty((Nx,Ny),dtype = float)
     for i in range(Nx):
         for j in range(Ny):
-            u[i,j] = Uinf + 0.5/pi*sum([p.sigma*K(X[i,j],Y[i,j],p,1,0) for p in panel])
-            v[i,j] = 0.5/pi*sum([p.sigma*K(X[i,j],Y[i,j],p,0,1) for p in panel])
+            u[i,j] = Uinf + 0.25/pi*sum([p.sigma*K(X[i,j],Y[i,j],p,1,0) for p in panel])
+            v[i,j] = 0.25/pi*sum([p.sigma*K(X[i,j],Y[i,j],p,0,1) for p in panel])
     return u,v
 
 # Define mesh grid
-Nx,Ny=40,40
+Nx,Ny=100,100
 valX,valY = 1.0,1.0
 xmin,xmax = min([p.xa for p in panel]),max([p.xa for p in panel])
 ymin,ymax = min([p.xa for p in panel]),max([p.ya for p in panel])
