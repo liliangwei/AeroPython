@@ -73,7 +73,7 @@ def definePanels(N,xp,yp):
         
     return panel
 
-N = 20
+N = 40
 panel = definePanels(N,xp,yp)
 
 # plotting the geometry with the panels
@@ -140,7 +140,7 @@ def kuttaArray(p):
     N = len(p)
     B = np.zeros(N+1,dtype=float)
     for j in range(N):
-        if(j==0):
+        if (j==0):
             B[j] = 0.5/pi*I(p[N-1].xc,p[N-1].yc,p[j],-sin(p[N-1].beta),+cos(p[N-1].beta))
         elif (j==N-1):
             B[j] = 0.5/pi*I(p[0].xc,p[0].yc,p[j],-sin(p[0].beta),+cos(p[0].beta))
@@ -226,23 +226,28 @@ plt.ylim(yStart,yEnd)
 plt.gca().invert_yaxis()
 plt.title('Number of panels : %d'%len(panel));
 
+# sum of all source/sink strengths
+print '--> sum of source/sink strengths:',sum([p.sigma*p.length for p in panel])
+
 # calculation of the lift
 Cl = gamma*sum([p.length for p in panel])/(0.5*freestream.Uinf*(xmax-xmin))
 print '--> Lift coefficient: Cl =',Cl
 
 # Get velocity field
-def getVelocityField(panel,freestream,X,Y):
+def getVelocityField(panel,freestream,gamma,X,Y):
     Nx,Ny = X.shape
     u,v = np.empty((Nx,Ny),dtype=float),np.empty((Nx,Ny),dtype=float)
     for i in range(Nx):
         for j in range(Ny):
             u[i,j] = freestream.Uinf*cos(freestream.alpha)\
-				+ 0.5/pi*sum([p.sigma*I(X[i,j],Y[i,j],p,1,0) for p in panel])
+				+ 0.5/pi*sum([p.sigma*I(X[i,j],Y[i,j],p,1,0) for p in panel])\
+				- 0.5/pi*sum([gamma*I(X[i,j],Y[i,j],p,0,-1) for p in panel])
             v[i,j] = freestream.Uinf*sin(freestream.alpha)\
-				+ 0.5/pi*sum([p.sigma*I(X[i,j],Y[i,j],p,0,1) for p in panel])
+				+ 0.5/pi*sum([p.sigma*I(X[i,j],Y[i,j],p,0,1) for p in panel])\
+				- 0.5/pi*sum([gamma*I(X[i,j],Y[i,j],p,1,0) for p in panel])
     return u,v
 
-Nx,Ny = 20,20
+Nx,Ny = 100,100
 valX,valY = 1.0,2.0
 xmin,xmax = min([p.xa for p in panel]),max([p.xa for p in panel])
 ymin,ymax = min([p.ya for p in panel]),max([p.ya for p in panel])
@@ -251,7 +256,7 @@ yStart,yEnd = ymin-valY*(ymax-ymin),ymax+valY*(ymax-ymin)
 X,Y = np.meshgrid(np.linspace(xStart,xEnd,Nx),np.linspace(yStart,yEnd,Ny))
 
 # get the velicity field on the mesh grid
-u,v = getVelocityField(panel,freestream,X,Y)
+u,v = getVelocityField(panel,freestream,gamma,X,Y)
 
 # plot the velocity streamline
 size=10

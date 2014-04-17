@@ -102,7 +102,7 @@ class Freestream:
         self.alpha = alpha*pi/180
 
 Uinf = 1.
-alpha = 0.
+alpha = 5.
 freestream = Freestream(Uinf,alpha)
 
 # Using boundary condition to evaluate Iij(zi)
