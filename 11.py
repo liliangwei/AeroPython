@@ -6,8 +6,8 @@ from math import *
 import matplotlib.pyplot as plt
 
 # read of the geometry
-#coords = np.loadtxt(fname='C:/Users/llwei89/Documents/Github/AeroPython/resources/n0012.dat')
-coords = np.loadtxt(fname='/home/starson/AeroPython/resources/n0012.dat')
+coords = np.loadtxt(fname='C:/Users/llwei89/Documents/Github/AeroPython/resources/n0012.dat')
+#coords = np.loadtxt(fname='/home/starson/AeroPython/resources/n0012.dat')
 xp,yp = coords[:,0],coords[:,1]
 
 # plotting the geometry
@@ -173,7 +173,7 @@ A = buildMatrix(panel)
 B = buildRHS(panel,freestream)
 
 # Solving the linear system
-var = np.linalg.solve(A,B)
+var = np.linalg.solve(A,B)######
 for i in range(len(panel)):
     panel[i].sigma = var[i]
 gamma = var[-1]
@@ -263,7 +263,7 @@ size=10
 plt.figure(figsize=(size,(yEnd-yStart)/(xEnd-xStart)*size))
 plt.xlabel('x',fontsize=16)
 plt.ylabel('y',fontsize=16)
-plt.streamplot(X,Y,u,v,density=2,linewidth=1,arrowsize=1,arrowstyle='->')
+plt.streamplot(X,Y,u,v,density=3,linewidth=1,arrowsize=1,arrowstyle='->')
 plt.fill([p.xa for p in panel],[p.ya for p in panel],'ko-',linewidth=2,zorder=2)
 plt.xlim(xStart,xEnd)
 plt.ylim(yStart,yEnd)

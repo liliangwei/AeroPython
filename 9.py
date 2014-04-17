@@ -35,7 +35,7 @@ class Panel:
         self.Vt = 0.
         self.Cp = 0.
 
-Np = 20
+Np = 50
 
 # End points of panel
 
@@ -129,7 +129,7 @@ plt.ylim(-4.0,2.0);
 
 def K(xci,yci,pj,dx,dy):
     def func(s):
-        return (+(xci-(pj.xa-sin(pj.beta)*s))*dx\
+        return (-(xci-(pj.xa-sin(pj.beta)*s))*dx\
                 +(yci-(pj.ya+cos(pj.beta)*s))*dy)\
                 /((xci-(pj.xa-sin(pj.beta)*s))**2\
                 +(yci-(pj.ya+cos(pj.beta)*s))**2)
@@ -161,7 +161,7 @@ size = 10
 plt.figure(figsize=(size,(yEnd-yStart)/(xEnd-xStart)*size))
 plt.xlabel('x',fontsize=16)
 plt.ylabel('y',fontsize=16)
-plt.streamplot(X,Y,u,v,density=2,linewidth=1,arrowsize=1,arrowstyle='->')
+plt.streamplot(X,Y,u,v,density=3,linewidth=1,arrowsize=1,arrowstyle='->')
 plt.fill([p.xa for p in panel],[p.ya for p in panel],'ko-',linewidth=2,zorder=2)
 plt.xlim(xStart,xEnd)
 plt.ylim(yStart,yEnd)
