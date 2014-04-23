@@ -7,6 +7,9 @@ from scipy import integrate
 from math import *
 import matplotlib.pyplot as plt
 
+alpha = 2       # the angle of attack from main elemnt chord line
+AL = alpha / 57.2958     # get into radians
+
 # read of the geometry
 #coords = np.loadtxt(fname='C:/Users/llwei89/Documents/Github/AeroPython/resources/n0012.dat')
 coords = np.loadtxt(fname='/home/starson/AeroPython/resources/s1223.dat')
@@ -146,12 +149,11 @@ DL = np.append([p.length for p in panelF],[p.length for p in panelM])
 for i in range(Ntotal):
 
 #determine if we are on the flap or main
-    if(i<NM):
+    if(i<NF):
     # Dealing with the both collocation points on flap
 
-
-        for j in range(NM+1):
-            if(j<=NM):
+        for j in range(Ntotal+1):
+            if(j<NF):
         # We are dealing with both collocation points on flap
         # We find the influence coefficient for a specific collocation 
         # point, i, on each of the panels, j. Then we move to the next
@@ -201,7 +203,100 @@ for i in range(Ntotal):
                 W1 = -U1L*sin(-TH[j]) + W1L*cos(-TH[j])
                 W2 = -U2L*sin(-TH[j]) + W2L*cos(-TH[j])
 
+            # Compute the coefficients of gamma in the influence matrix
+                if (j==0) or (j==NF):
+                    A[i,0] = -U1*sin(TH[i]) + W1*cos(TH[i])
+                    HOLDA = -U2*sin(TH[i]) + W2*cos(TH[i])
+                    B[i,0] = U1*cos(TH[i]) + W1*sin(TH[i])
+                    HOLDB = U2*cos(TH[i]) + W2*sin(TH[i])
+                elif (j==NF-1):
+                    A[i,NM-1] = -U1*sin(TH[i]) + W1*cos(TH[i]) + HOLDA
+                    A[i,NM] = -U2*sin(TH[i]) + W2*cos(TH[i])
+                    B[i,NM-1] = U1*cos(TH[i]) + W1*sin(TH[i]) + HOLDB
+                    B[i,NM] + U2*cos(TH[i]) + W2*sin(TH[i])
+                else:
+                    A[i,j] = -U1*sin(TH[i]) + W1*cos(TH[i]) + HOLDA
+                    HOLDA = -U2*sin(TH[i]) + W2*cos(TH[i])
+                    B[i,j] = U1*cos(TH[i]) + W1*sin(TH[i]) + HOLDB
+                    HOLDB = U2*cos(TH[i]) + W2*sin(TH[i])
+            elif (j>NF):
+        # collocation point i is on the flap, collocation point j is on main
+        
+        # we find the influence coefficient for a specific collocation
+        # point, i, on each of panels, j. Then we move on to the next collocation point
+        
+        # since there are two separate airfoils, point j=NF+1
+        # should not be solved for (this is the 2nd edge of the last panel)
+        # During the for loop, any j after this should be j-1, 
+        # the reference the correct panel, except when referring to matrix A
+        
+        # Convert collocation point to local coords
+                XT = CO1[i] - panelM[j-NF-1].xa
+                YT = CO2[i] - panelM[j-NF-1].ya
+                X2T = panelM[j-NF-1].xb-panelM[j-NF-1].xa
+                Y2T = panelM[j-NF-1].yb-panelM[j-NF-1].ya
+                
+                X = XT*cos(TH[j-1])+YT*sin(TH[j-1])
+                Y = -XT*cos(TH[j-1])+YT*cos(TH[j-1])
+                
+                X = XT*cos(TH[j-1]) + YT*sin(TH[j-1])
+                Y = -XT*sin(TH[j-1]) + YT*cos(TH[j-1])
+                X1 = 0
+                Y1 = 0
+                X2 = X2T*cos(TH[j-1]) + Y2T*sin(TH[j-1])
+                Y2 = 0
+        
+        # Find the length of r1,r2, theta1 and theta2
+                R1 = sqrt((X-X1)**2 + (Y-Y1)**2)
+                R2 = sqrt((X-X2)**2 + (Y-Y2)**2)
+                
+                TH1 = atan2(Y-Y1,X-X1)
+                TH2 = atan2(Y-Y2,X-X2)
+                
+                if (i==j-1):
+                    Y = 0
+                    TH1 = 0
+                
+        # Compute velocity components as functions of Gamma1 and Gamm2
+        # velocity of panel j due to collocation point i
+                if (i==j-1):
+                    U1L = -0.5*(X-X2)/X2
+                    U2L = 0.5*X/X2
+                    W1L = -0.15916
+                    W2L = 0.15916
+                else:
+                    U1L = -(Y*log(R2/R1)+X*(TH2-TH1)-X2*(TH2-TH1))/(6.28319*X2)
+                    U2L = (Y*log(R2/R1) + X*(TH2-TH1))/(6.28319*X2)
+                    W1L = -((X2-Y*(TH2-TH1))-X*log(R1/R2) + X2*log(R1/R2))/(6.28310*X2)
+                    W2L = ((X2-Y*(TH2-TH1))-X*log(R1/R2))/(6.28319*X2)
+                
+        # Transferom the local velocities into global velocity function
+                U1 = U1L*cos(-TH[j-1]) + W1L*sin(-TH[j-1])
+                U2 = U2L*cos(-TH[j-1]) + W2L*sin(-TH[j-1])
+                W1 = -U1L*sin(-TH[j-1]) + W1L*cos(-TH[j-1])
+                W2 = -U2L*sin(-TH[j-1]) + W2L*cos(-TH[j-1])
+        
+        # Compute the coefficients of gamma in the influence matrix
+                if (j==NF+1):
+                    A[i,NF+1] = -U1*sin(TH[i]) + W1*cos(TH[i])
+                    HOLDA = -U2*sin(TH[i]) + W2*cos(TH[i])
+                    B[i,NF+1] = U1*cos(TH[i]) + W1*sin(TH[i])
+                    HOLDB = U2*cos(TH[i]) + W2*sin(TH[i])
+                elif (j==Ntotal):
+                    A[i,Ntotal] = -U1*sin(TH[i]) + W1*cos(TH[i]) + HOLDA
+                    A[i,NA-1] = -U2*sin(TH[i]) + W2*cos(TH[i])
+                    B[i,Ntotal] = U1*cos(TH[i]) + W1*sin(TH[i]) + HOLDB
+                    B[i,NA-1] = U2*cos(TH[i]) + W2*sin(TH[i])
+                else:
+                    A[i,j] = -U1*sin(TH[i]) + W1*cos(TH[i]) + HOLDA
+                    HOLDA = -U2*sin(TH[i]) + W2*cos(TH[i])
+                    B[i,j] = U1*cos(TH[i]) + W1*sin(TH[i]) + HOLDB
+                    HOLDB = U2*cos(TH[i]) + W2*sin(TH[i])
+            else:
+                A[i,NA] = cos(AL) * sin(TH[i]) -sin(AL)*cos(TH[i])
+    else:
+    # We are dealing with the collocation point on the main
+    
+        
+        
 
-
-
-plt.show()
