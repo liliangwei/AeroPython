@@ -8,7 +8,7 @@ from sympy import Matrix
 from math import *
 import matplotlib.pyplot as plt
 
-alpha = 2       # the angle of attack from main elemnt chord line
+alpha = 0       # the angle of attack from main elemnt chord line
 AL = alpha / 57.2958     # get into radians
 
 # read of the geometry
@@ -107,7 +107,7 @@ def definePanels(N,xp,yp):
         
     return panel
     
-NM,NF = 8,4                                     # Number of panels for each
+NM,NF = 40,20                                     # Number of panels for each
 Ntotal = NM + NF                                  # Total number of panels
 NA = Ntotal + 2                                   # Size of A matrix
 
@@ -180,7 +180,7 @@ for i in range(Ntotal):
                 TH1 = atan2(Y-Y1,X-X1)
                 TH2 = atan2(Y-Y2,X-X2)
                 
-                if(i==j):
+                if i==j:
                     Y = 0
                     TH1 = 0
         # Compute velocity components as functions of Gamma1 and Gamma2
@@ -190,12 +190,12 @@ for i in range(Ntotal):
                     U2L = 0.5*X/X2
                     W1L = -0.15916
                     W2L = 0.15916
+                    
                 else:
                     U1L = -(Y*log(R2/R1)+X*(TH2-TH1)-X2*(TH2-TH1))/(6.28319*X2)
                     U2L = (Y*log(R2/R1) + X*(TH2-TH1))/(6.28319*X2)
                     W1L = -((X2-Y*(TH2-TH1)) - X*log(R1/R2) + X2*log(R1/R2))/(6.28319*X2)
-                    W2L = ((X2 - Y*(TH2-TH1))-X*log(R1/R2))/(6.28319*X2)
-                       
+                    W2L = ((X2 - Y*(TH2-TH1))-X*log(R1/R2))/(6.28319*X2)   
                 
             # Transform the local velocities into global velocity function
                 U1 = U1L*cos(-TH[j]) + W1L*sin(-TH[j])
@@ -209,6 +209,7 @@ for i in range(Ntotal):
                     HOLDA = -U2*sin(TH[i]) + W2*cos(TH[i])
                     B[i,0] = U1*cos(TH[i]) + W1*sin(TH[i])
                     HOLDB = U2*cos(TH[i]) + W2*sin(TH[i])
+                    
                 elif (j==NF-1):
                     A[i,NF-1] = -U1*sin(TH[i]) + W1*cos(TH[i]) + HOLDA
                     A[i,NF] = -U2*sin(TH[i]) + W2*cos(TH[i])
@@ -235,14 +236,13 @@ for i in range(Ntotal):
                 YT = CO2[i] - panelM[j-NF-1].ya
                 X2T = panelM[j-NF-1].xb-panelM[j-NF-1].xa
                 Y2T = panelM[j-NF-1].yb-panelM[j-NF-1].ya
-                print i,j
+               
                 X = XT*cos(TH[j-1]) + YT*sin(TH[j-1])   # collocation point
                 Y = -XT*sin(TH[j-1]) + YT*cos(TH[j-1])  # collocation point
                 X1 = 0
                 Y1 = 0
                 X2 = X2T*cos(TH[j-1]) + Y2T*sin(TH[j-1])
                 Y2 = 0
-        
         # Find the length of r1,r2, theta1 and theta2
                 R1 = sqrt((X-X1)**2 + (Y-Y1)**2)
                 R2 = sqrt((X-X2)**2 + (Y-Y2)**2)
@@ -253,6 +253,7 @@ for i in range(Ntotal):
                 if (i==j-1):
                     Y = 0
                     TH1 = 0
+                    
                 
         # Compute velocity components as functions of Gamma1 and Gamm2
         # velocity of panel j due to collocation point i
@@ -261,7 +262,6 @@ for i in range(Ntotal):
                     U2L = 0.5*X/X2
                     W1L = -0.15916
                     W2L = 0.15916
-                    
                 else:
                     U1L = -(Y*log(R2/R1)+X*(TH2-TH1)-X2*(TH2-TH1))/(6.28319*X2)
                     U2L = (Y*log(R2/R1) + X*(TH2-TH1))/(6.28319*X2)
@@ -291,7 +291,7 @@ for i in range(Ntotal):
                     B[i,j] = U1*cos(TH[i]) + W1*sin(TH[i]) + HOLDB
                     HOLDB = U2*cos(TH[i]) + W2*sin(TH[i])
          
-        A[i,NA] = cos(AL) * sin(TH[i]) -sin(AL)*cos(TH[i])
+        #A[i,NA] = cos(AL) * sin(TH[i]) -sin(AL)*cos(TH[i])
     else:
     # We are dealing with the collocation point on the main
         for j in range(Ntotal+1):
@@ -347,7 +347,7 @@ for i in range(Ntotal):
                 if (j==0):
                     A[i,0] = -U1*sin(TH[i]) + W1*cos(TH[i])
                     HOLDA = -U2*sin(TH[i]) + W2*cos(TH[i])
-                    B[i,0] = U1*cos(TH[i]) + W2*sin(TH[i])
+                    B[i,0] = U1*cos(TH[i]) + W1*sin(TH[i])
                     HOLDB = U2*cos(TH[i]) + W2*sin(TH[i])
                 elif(j==NF-1):
                     A[i,NF-1] = -U1*sin(TH[i]) + W1*cos(TH[i]) + HOLDA
@@ -391,13 +391,13 @@ for i in range(Ntotal):
                 TH1 = atan2(Y-Y1,X-X1)
                 TH2 = atan2(Y-Y2,X-X2)
                 
-                if (i==j-1):
+                if i==j-1:
                     Y = 0
                     TH1 = 0
                 
             # Compute velocity components as functions of Gamma1 and Gamma2
             # Velocity of panel j due to collocation point i 
-                if (i==j-1):
+                if i==j-1:
                     U1L = -0.5*(X-X2)/X2
                     U2L = 0.5*X/X2
                     W1L = -0.15916
@@ -431,8 +431,8 @@ for i in range(Ntotal):
                     B[i,j] = U1*cos(TH[i]) + W1*sin(TH[i]) + HOLDB
                     HOLDB = U2*cos(TH[i]) + W2*sin(TH[i])
                 
-        A[i,NA] = cos(AL) * sin(TH[i]) - sin(AL)* cos(TH[i])
-                    
+        #A[i,NA] = cos(AL) * sin(TH[i]) - sin(AL)* cos(TH[i])
+                   
 
         # Add both kutta conditions. Be careful of where the ones are
         # matrix columns NF and Ntotal+1 are the last edges of the airfold
@@ -471,7 +471,6 @@ def ToReducedRowEchelonForm(M):
         lead += 1
    
     return M
-
 
 R = ToReducedRowEchelonForm(A)
 
@@ -526,6 +525,6 @@ plt.legend(['extrados','intrados'],'best',prop={'size':14})
 plt.plot([p.xc for p in panelF],[p.Cp for p in panelF],'ro',linewidth=2)
 plt.xlim(xStart,xEnd)
 plt.ylim(yStart,yEnd)
-#plt.gca().invert_yaxis();
+plt.gca().invert_yaxis();
 
-#plt.show()
+plt.show()
