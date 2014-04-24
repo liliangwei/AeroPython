@@ -6,8 +6,8 @@ from math import *
 import matplotlib.pyplot as plt
 
 # read of the geometry
-#coords = np.loadtxt(fname='C:/Users/llwei89/Documents/Github/AeroPython/resources/n0012.dat')
-coords = np.loadtxt(fname='/home/starson/AeroPython/resources/n0012.dat')
+coords = np.loadtxt(fname='C:/Users/llwei89/Documents/Github/AeroPython/resources/n0012.dat')
+#coords = np.loadtxt(fname='/home/starson/AeroPython/resources/n0012.dat')
 xp,yp = coords[:,0],coords[:,1]
 
 # plotting the geometry
@@ -247,7 +247,7 @@ def getVelocityField(panel,freestream,gamma,X,Y):
 				- 0.5/pi*sum([gamma*I(X[i,j],Y[i,j],p,1,0) for p in panel])
     return u,v
 
-Nx,Ny = 100,100
+Nx,Ny = 10,10
 valX,valY = 1.0,2.0
 xmin,xmax = min([p.xa for p in panel]),max([p.xa for p in panel])
 ymin,ymax = min([p.ya for p in panel]),max([p.ya for p in panel])

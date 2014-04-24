@@ -8,12 +8,12 @@ from sympy import Matrix
 from math import *
 import matplotlib.pyplot as plt
 
-alpha = 0       # the angle of attack from main elemnt chord line
+alpha = 2       # the angle of attack from main elemnt chord line
 AL = alpha / 57.2958     # get into radians
 
 # read of the geometry
-#coords = np.loadtxt(fname='C:/Users/llwei89/Documents/Github/AeroPython/resources/n0012.dat')
-coords = np.loadtxt(fname='/home/starson/AeroPython/resources/s1223.dat')
+coords = np.loadtxt(fname='C:/Users/llwei89/Documents/Github/AeroPython/resources/s1223.dat')
+#coords = np.loadtxt(fname='/home/starson/AeroPython/resources/s1223.dat')
 xpM,ypM = coords[:,0],coords[:,1]            # read in the original airfoil
 
 # Scale the second flap
@@ -107,9 +107,11 @@ def definePanels(N,xp,yp):
         
     return panel
     
-NM,NF = 40,20                                     # Number of panels for each
+NM,NF = 8,4                                     # Number of panels for each
 Ntotal = NM + NF                                  # Total number of panels
 NA = Ntotal + 2                                   # Size of A matrix
+
+
 
 panelM = definePanels(NM,xpM,ypM)
 panelF = definePanels(NF,xpF,ypF)
@@ -291,7 +293,7 @@ for i in range(Ntotal):
                     B[i,j] = U1*cos(TH[i]) + W1*sin(TH[i]) + HOLDB
                     HOLDB = U2*cos(TH[i]) + W2*sin(TH[i])
          
-        #A[i,NA] = cos(AL) * sin(TH[i]) -sin(AL)*cos(TH[i])
+        A[i,NA] = cos(AL) * sin(TH[i]) -sin(AL)*cos(TH[i])
     else:
     # We are dealing with the collocation point on the main
         for j in range(Ntotal+1):
@@ -431,7 +433,7 @@ for i in range(Ntotal):
                     B[i,j] = U1*cos(TH[i]) + W1*sin(TH[i]) + HOLDB
                     HOLDB = U2*cos(TH[i]) + W2*sin(TH[i])
                 
-        #A[i,NA] = cos(AL) * sin(TH[i]) - sin(AL)* cos(TH[i])
+        A[i,NA] = cos(AL) * sin(TH[i]) - sin(AL)* cos(TH[i])
                    
 
         # Add both kutta conditions. Be careful of where the ones are
