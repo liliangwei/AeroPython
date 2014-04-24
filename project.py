@@ -7,7 +7,7 @@ from scipy import integrate
 from math import *
 import matplotlib.pyplot as plt
 
-alpha = 2       # the angle of attack from main elemnt chord line
+alpha = 0       # the angle of attack from main elemnt chord line
 
 
 AL = alpha / 57.2958     # get into radians
@@ -110,7 +110,7 @@ def definePanels(N,xp,yp):
     return panel
     
 
-NM,NF = 8,4                                     # Number of panels for each
+NM,NF = 100,50                                     # Number of panels for each
 
 
 Ntotal = NM + NF                                  # Total number of panels
@@ -193,8 +193,8 @@ for i in range(Ntotal):
                 if(i==j):
                     U1L = -0.5*(X-X2)/X2
                     U2L = 0.5*X/X2
-                    W1L = -0.15916
-                    W2L = 0.15916
+                    W1L = -20
+                    W2L = 20
                     
                 else:
                     U1L = -(Y*log(R2/R1)+X*(TH2-TH1)-X2*(TH2-TH1))/(6.28319*X2)
@@ -265,8 +265,8 @@ for i in range(Ntotal):
                 if (i==j-1):
                     U1L = -0.5*(X-X2)/X2
                     U2L = 0.5*X/X2
-                    W1L = -0.15916
-                    W2L = 0.15916
+                    W1L = -20
+                    W2L = 20
                 else:
                     U1L = -(Y*log(R2/R1)+X*(TH2-TH1)-X2*(TH2-TH1))/(6.28319*X2)
                     U2L = (Y*log(R2/R1) + X*(TH2-TH1))/(6.28319*X2)
@@ -336,8 +336,8 @@ for i in range(Ntotal):
                 if(i==j):
                     U1L = -0.5*(X-X2)/X2
                     U2L = 0.5*X/X2
-                    W1L = -0.15916
-                    W2L = 0.15916
+                    W1L = -20
+                    W2L = 20
                 else:
                     U1L = -(Y*log(R2/R1)+X*(TH2-TH1)-X2*(TH2-TH1))/(6.28319*X2)
                     U2L = (Y*log(R2/R1) + X*(TH2-TH1))/(6.28319*X2)
@@ -407,8 +407,8 @@ for i in range(Ntotal):
                 if i==j-1:
                     U1L = -0.5*(X-X2)/X2
                     U2L = 0.5*X/X2
-                    W1L = -0.15916
-                    W2L = 0.15916
+                    W1L = -20
+                    W2L = 20
                 else:
                     U1L = -(Y*log(R2/R1) + X*(TH2-TH1) - X2*(TH2-TH1))/(6.28319*X2)
                     U2L = (Y*log(R2/R1) + X*(TH2-TH1))/(6.28319*X2)
@@ -450,7 +450,7 @@ A[NA-2,NF] = 1
 #Main
 A[NA-1,NF+1] = 1
 A[NA-1,NA-1] = 1
-print A
+
 # Linear solver
 def ToReducedRowEchelonForm(M):
     #if not M : return

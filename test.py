@@ -7,7 +7,7 @@ from scipy import integrate
 from math import *
 import matplotlib.pyplot as plt
 
-alpha = 2       # the angle of attack from main elemnt chord line
+alpha = 0       # the angle of attack from main elemnt chord line
 AL = alpha / 57.2958     # get into radians
 
 # read of the geometry
@@ -142,9 +142,10 @@ for i in range(N):
         if(i==j):
             U1L = -0.5*(X-X2)/X2
             U2L = 0.5*X/X2
-            W1L = -0.15916
-            W2L = 0.15916
-                    
+ #           W1L = -0.15916
+ #           W2L = 0.15916
+            W1L = -50.
+            W2L = 50.      
         else:
             U1L = -(Y*log(R2/R1)+X*(TH2-TH1)-X2*(TH2-TH1))/(6.28319*X2)
             U2L = (Y*log(R2/R1) + X*(TH2-TH1))/(6.28319*X2)
@@ -247,6 +248,6 @@ plt.legend(['extrados','intrados'],'best',prop={'size':14})
 plt.plot([p.xc for p in panel],[p.Cp for p in panel],'ro',linewidth=2)
 plt.xlim(xStart,xEnd)
 plt.ylim(yStart,yEnd)
-#plt.gca().invert_yaxis();
+plt.gca().invert_yaxis();
 
 plt.show();
