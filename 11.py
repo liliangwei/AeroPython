@@ -285,5 +285,5 @@ plt.fill([p.xc for p in panel],[p.yc for p in panel],'ko-',linewidth=2,zorder=2)
 plt.xlim(xStart,xEnd)
 plt.ylim(yStart,yEnd)
 plt.title('Contour of pressure field');
-
+#
 plt.show()
