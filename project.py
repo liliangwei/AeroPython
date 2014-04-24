@@ -4,7 +4,6 @@
 
 import numpy as np
 from scipy import integrate
-from sympy import Matrix
 from math import *
 import matplotlib.pyplot as plt
 
@@ -12,7 +11,7 @@ alpha = 2       # the angle of attack from main elemnt chord line
 AL = alpha / 57.2958     # get into radians
 
 # read of the geometry
-coords = np.loadtxt(fname='C:/Users/llwei89/Documents/Github/AeroPython/resources/s1223.dat')
+coords = np.loadtxt(fname='C:/Users/llwei89/Documents/Github/AeroPython/resources/n0012.dat')
 #coords = np.loadtxt(fname='/home/starson/AeroPython/resources/s1223.dat')
 xpM,ypM = coords[:,0],coords[:,1]            # read in the original airfoil
 
@@ -107,14 +106,13 @@ def definePanels(N,xp,yp):
         
     return panel
     
-NM,NF = 8,4                                     # Number of panels for each
+NM,NF = 100,100                                     # Number of panels for each
 Ntotal = NM + NF                                  # Total number of panels
 NA = Ntotal + 2                                   # Size of A matrix
 
-
-
 panelM = definePanels(NM,xpM,ypM)
 panelF = definePanels(NF,xpF,ypF)
+
 
 # plotting the geometry with the panels
 valX,valY = 0.2,0.4
@@ -498,8 +496,8 @@ for i in range(Ntotal):
         panelM[i-NF].Cp = CP[i]
 
     
-#    CL = CL + -1.0*CP[i]*(cos(AL)*cos(TH[i]) + sin(A)* sin(TH[i]))*DL[i]
-#print [p.Cp for p in panelF]
+    CL = CL + -1.0*CP[i]*(cos(AL)*cos(TH[i]) + sin(AL)* sin(TH[i]))*DL[i]
+print [p.Cp for p in panelF],[p.Cp for p in panelM]
 
 # Plot pressure coefficients
 valX,valY = 0.2,0.4
@@ -528,5 +526,7 @@ plt.plot([p.xc for p in panelF],[p.Cp for p in panelF],'ro',linewidth=2)
 plt.xlim(xStart,xEnd)
 plt.ylim(yStart,yEnd)
 plt.gca().invert_yaxis();
+
+print CL
 
 plt.show()

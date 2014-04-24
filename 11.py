@@ -102,7 +102,7 @@ class Freestream:
         self.alpha = alpha*pi/180.0
 
 Uinf = 1.0
-alpha = 5.0
+alpha = 2.0
 freestream = Freestream(Uinf,alpha)
 
 # function to evaluate the integral Iij(zi)
