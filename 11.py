@@ -73,7 +73,7 @@ def definePanels(N,xp,yp):
         
     return panel
 
-N = 40
+N = 20
 panel = definePanels(N,xp,yp)
 
 # plotting the geometry with the panels
@@ -102,7 +102,7 @@ class Freestream:
         self.alpha = alpha*pi/180.0
 
 Uinf = 1.0
-alpha = 5.0
+alpha = 2.0
 freestream = Freestream(Uinf,alpha)
 
 # function to evaluate the integral Iij(zi)
@@ -247,7 +247,7 @@ def getVelocityField(panel,freestream,gamma,X,Y):
 				- 0.5/pi*sum([gamma*I(X[i,j],Y[i,j],p,1,0) for p in panel])
     return u,v
 
-Nx,Ny = 100,100
+Nx,Ny = 10,10
 valX,valY = 1.0,2.0
 xmin,xmax = min([p.xa for p in panel]),max([p.xa for p in panel])
 ymin,ymax = min([p.ya for p in panel]),max([p.ya for p in panel])

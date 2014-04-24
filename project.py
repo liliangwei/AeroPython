@@ -4,12 +4,14 @@
 
 import numpy as np
 from scipy import integrate
-from sympy import Matrix
 from math import *
 import matplotlib.pyplot as plt
 
 alpha = 2       # the angle of attack from main elemnt chord line
-AL = alpha/57.2958     # get into radians
+
+
+AL = alpha / 57.2958     # get into radians
+
 
 # read of the geometry
 #coords = np.loadtxt(fname='C:/Users/llwei89/Documents/Github/AeroPython/resources/n0012.dat')
@@ -107,7 +109,10 @@ def definePanels(N,xp,yp):
         
     return panel
     
+
 NM,NF = 8,4                                     # Number of panels for each
+
+
 Ntotal = NM + NF                                  # Total number of panels
 NA = Ntotal + 2                                   # Size of A matrix
 
@@ -292,7 +297,7 @@ for i in range(Ntotal):
                     HOLDB = U2*cos(TH[i]) + W2*sin(TH[i])
          
         A[i,NA] = cos(AL) * sin(TH[i]) -sin(AL)*cos(TH[i])
-        
+
     else:
     # We are dealing with the collocation point on the main
         for j in range(Ntotal+1):
@@ -434,7 +439,7 @@ for i in range(Ntotal):
                     HOLDB = U2*cos(TH[i]) + W2*sin(TH[i])
                 
         A[i,NA] = cos(AL) * sin(TH[i]) - sin(AL)* cos(TH[i])
-                 
+
 
         # Add both kutta conditions. Be careful of where the ones are
         # matrix columns NF and Ntotal+1 are the last edges of the airfold
@@ -445,7 +450,7 @@ A[NA-2,NF] = 1
 #Main
 A[NA-1,NF+1] = 1
 A[NA-1,NA-1] = 1
-
+print A
 # Linear solver
 def ToReducedRowEchelonForm(M):
     #if not M : return
@@ -497,7 +502,8 @@ for i in range(Ntotal):
         panelF[i].Cp = CP[i]
     else:
         panelM[i-NF].Cp = CP[i]
-   
+
+    CL = CL + -1.0*CP[i]*(cos(AL)*cos(TH[i]) + sin(AL)* sin(TH[i]))*DL[i]
 
 
 # Plot pressure coefficients
@@ -527,5 +533,7 @@ plt.plot([p.xc for p in panelF],[p.Cp for p in panelF],'ro',linewidth=2)
 plt.xlim(xStart,xEnd)
 plt.ylim(yStart,yEnd)
 plt.gca().invert_yaxis();
+
+
 
 plt.show()

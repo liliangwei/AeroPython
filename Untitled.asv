@@ -10,32 +10,28 @@ close all
 % clockwise, lower trailing edge. 
 alpha = 2; %alpha is defined as angle of attack from main element chord line. 
 AL = alpha / 57.2958; % get into radians 
-ref_length = 1.33; % distance from leading edge of main element to trailing 
+ref_length = 1.43; % distance from leading edge of main element to trailing 
  % edge of flap 
  
  % points file, unit length 
-x_flap = [1.3295760221444959, 1.3195008403626514, 1.2902615240078437, 1.2447202210871777, 1.1873348316354435, 1.1237226373996958, 1.0601104431639481, 1.0027250537122139, 0.95718375079154794, 0.92794443443674024, 0.91786925265489572, 0.92794443443674024, 0.95718375079154794, 1.0027250537122139, 1.0601104431639481, 1.1237226373996958, 1.1873348316354435, 1.2447202210871777, 1.2902615240078437, 1.3195008403626514,1.3295760221444959]
-y_flap = [-0.34678822, -0.32109226, -0.2824794,  -0.23323397, -0.17817296, -0.12271292,-0.07695768, -0.05292926, -0.04653118, -0.05321987, -0.06534437, -0.07522309,-0.09266063, -0.115117,   -0.14137741, -0.17362072, -0.21131875, -0.25223076,-0.29255765, -0.32726568, -0.34678822];
-x_main = [  1.00000000e+00,   9.75529482e-01,   9.04513272e-01,   7.93902932e-01,6.54525772e-01,   5.00025000e-01,   3.45524228e-01,   2.06147068e-01,9.55367282e-02,   2.45205183e-02,   5.00000000e-05,   2.45205183e-02,9.55367282e-02,   2.06147068e-01,   3.45524228e-01,   5.00025000e-01,6.54525772e-01,   7.93902932e-01,   9.04513272e-01,   9.75529482e-01,1.00000000e+00];
-y_main = [ 0.0,          0.01973095,  0.04823926,  0.07617556,  0.10155127,  0.12192082,0.13452394,  0.12720359,  0.09342979,  0.04707046,  0.00178,    -0.01569377,-0.01116882,  0.0059909 ,  0.03112762 , 0.05141076,  0.05980935,  0.05444881,0.03736502,  0.01402486,  0.0];
+x_flap = [1.3297217118151354, 1.1241302174769228, 0.9185387231387101, 1.1241302174769228]
+x_main = [1.0, 0.85355339059327373, 0.5, 0.14644660940672627, 0.0, 0.14644660940672616, 0.49999999999999989, 0.85355339059327373]
 
-x_flap=x_flap';
-y_flap=y_flap';
-x_main=x_main';
-y_main=y_main';
+
+
 % Establish panel endpoints for each separate element 
  for i = 1:(length(x_flap)-1) 
  flap_PT1(i,1) = x_flap(i,1); 
  flap_PT2(i,1) = x_flap(i+1,1); 
- flap_PT1(i,2) = y_flap(i,1); 
- flap_PT2(i,2) = y_flap(i+1,1); 
+ flap_PT1(i,2) = y_flap(i,2); 
+ flap_PT2(i,2) = y_flap(i+1,2); 
 end 
  
 for i = 1:(length(x_main)-1) 
  main_PT1(i,1) = x_main(i,1); 
  main_PT2(i,1) = x_main(i+1,1); 
- main_PT1(i,2) = y_main(i,1); 
- main_PT2(i,2) = y_main(i+1,1); 
+ main_PT1(i,2) = y_main(i,2); 
+ main_PT2(i,2) = y_main(i+1,2); 
 end 
  
 M_flap =length(x_flap) - 1; % number of flap panels 
@@ -403,14 +399,13 @@ for i = 1:M
  CL = CL + -1.*CP(i)*(cos(AL)*cos(TH(i)) + sin(AL)*sin(TH(i)))*DL(i); 
 end 
 CP = CP'; 
-disp(CP);
+ 
 % report values of interest 
-%CL = CL/ref_length % varies based on ref. length definition
-CL
-unitxm = x_main(:,1)./ref_length; 
-unitxf = x_flap(:,1)./ref_length; 
-unitym = y_main(:,1)./ref_length; 
-unityf = y_flap(:,1)./ref_length; 
+CL = CL/ref_length % varies based on ref. length definition
+unitxm = EPT_main(:,1)./ref_length; 
+unitxf = EPT_flap(:,1)./ref_length; 
+unitym = EPT_main(:,2)./ref_length; 
+unityf = EPT_flap(:,2)./ref_length; 
 figure 
 plot(unitxm, unitym) 
 title('Two Element Airfoil') 
