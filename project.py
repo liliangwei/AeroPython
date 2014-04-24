@@ -8,8 +8,8 @@ from sympy import Matrix
 from math import *
 import matplotlib.pyplot as plt
 
-alpha = 0       # the angle of attack from main elemnt chord line
-AL = alpha / 57.2958     # get into radians
+alpha = 2       # the angle of attack from main elemnt chord line
+AL = alpha/57.2958     # get into radians
 
 # read of the geometry
 #coords = np.loadtxt(fname='C:/Users/llwei89/Documents/Github/AeroPython/resources/n0012.dat')
@@ -107,7 +107,7 @@ def definePanels(N,xp,yp):
         
     return panel
     
-NM,NF = 40,20                                     # Number of panels for each
+NM,NF = 8,4                                     # Number of panels for each
 Ntotal = NM + NF                                  # Total number of panels
 NA = Ntotal + 2                                   # Size of A matrix
 
@@ -291,7 +291,8 @@ for i in range(Ntotal):
                     B[i,j] = U1*cos(TH[i]) + W1*sin(TH[i]) + HOLDB
                     HOLDB = U2*cos(TH[i]) + W2*sin(TH[i])
          
-        #A[i,NA] = cos(AL) * sin(TH[i]) -sin(AL)*cos(TH[i])
+        A[i,NA] = cos(AL) * sin(TH[i]) -sin(AL)*cos(TH[i])
+        
     else:
     # We are dealing with the collocation point on the main
         for j in range(Ntotal+1):
@@ -384,6 +385,7 @@ for i in range(Ntotal):
                 Y1 = 0
                 X2 = X2T*cos(TH[j-1]) + Y2T*sin(TH[j-1])
                 Y2 = 0
+                
             # Find the length of r1, r2, theta1, and theta2
                 R1 = sqrt((X-X1)**2 + (Y-Y1)**2)  # length from panel point 1 to collocation point, in panel coords
                 R2 = sqrt((X-X2)**2 + (Y-Y2)**2)  # length from panel point 2 to collocation point, in panel coords
@@ -431,8 +433,8 @@ for i in range(Ntotal):
                     B[i,j] = U1*cos(TH[i]) + W1*sin(TH[i]) + HOLDB
                     HOLDB = U2*cos(TH[i]) + W2*sin(TH[i])
                 
-        #A[i,NA] = cos(AL) * sin(TH[i]) - sin(AL)* cos(TH[i])
-                   
+        A[i,NA] = cos(AL) * sin(TH[i]) - sin(AL)* cos(TH[i])
+                 
 
         # Add both kutta conditions. Be careful of where the ones are
         # matrix columns NF and Ntotal+1 are the last edges of the airfold
@@ -486,6 +488,7 @@ for i in range(Ntotal):
     
     V = VEL + cos(AL)*cos(TH[i]) + sin(AL) * sin(TH[i])
     CP[i] = 1 - V**2
+    CL = CL -1.0*CP[i]*(cos(AL)*cos(TH[i]) + sin(AL)* sin(TH[i]))*DL[i]
 
 CP = np.transpose(CP)
 
@@ -494,10 +497,8 @@ for i in range(Ntotal):
         panelF[i].Cp = CP[i]
     else:
         panelM[i-NF].Cp = CP[i]
+   
 
-    
-#    CL = CL + -1.0*CP[i]*(cos(AL)*cos(TH[i]) + sin(A)* sin(TH[i]))*DL[i]
-#print [p.Cp for p in panelF]
 
 # Plot pressure coefficients
 valX,valY = 0.2,0.4
