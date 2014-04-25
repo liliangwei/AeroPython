@@ -7,8 +7,8 @@ from scipy import integrate
 from math import *
 import matplotlib.pyplot as plt
 
-alpha = 0       # the angle of attack from main elemnt chord line
-
+alpha = 5.       # the angle of attack from main elemnt chord line
+Uinf = 20.
 
 AL = alpha / 57.2958     # get into radians
 
@@ -193,8 +193,8 @@ for i in range(Ntotal):
                 if(i==j):
                     U1L = -0.5*(X-X2)/X2
                     U2L = 0.5*X/X2
-                    W1L = -20
-                    W2L = 20
+                    W1L = -Uinf
+                    W2L = Uinf
                     
                 else:
                     U1L = -(Y*log(R2/R1)+X*(TH2-TH1)-X2*(TH2-TH1))/(6.28319*X2)
@@ -265,8 +265,8 @@ for i in range(Ntotal):
                 if (i==j-1):
                     U1L = -0.5*(X-X2)/X2
                     U2L = 0.5*X/X2
-                    W1L = -20
-                    W2L = 20
+                    W1L = -Uinf
+                    W2L = Uinf
                 else:
                     U1L = -(Y*log(R2/R1)+X*(TH2-TH1)-X2*(TH2-TH1))/(6.28319*X2)
                     U2L = (Y*log(R2/R1) + X*(TH2-TH1))/(6.28319*X2)
@@ -336,8 +336,8 @@ for i in range(Ntotal):
                 if(i==j):
                     U1L = -0.5*(X-X2)/X2
                     U2L = 0.5*X/X2
-                    W1L = -20
-                    W2L = 20
+                    W1L = -Uinf
+                    W2L = Uinf
                 else:
                     U1L = -(Y*log(R2/R1)+X*(TH2-TH1)-X2*(TH2-TH1))/(6.28319*X2)
                     U2L = (Y*log(R2/R1) + X*(TH2-TH1))/(6.28319*X2)
@@ -407,8 +407,8 @@ for i in range(Ntotal):
                 if i==j-1:
                     U1L = -0.5*(X-X2)/X2
                     U2L = 0.5*X/X2
-                    W1L = -20
-                    W2L = 20
+                    W1L = -Uinf
+                    W2L = Uinf
                 else:
                     U1L = -(Y*log(R2/R1) + X*(TH2-TH1) - X2*(TH2-TH1))/(6.28319*X2)
                     U2L = (Y*log(R2/R1) + X*(TH2-TH1))/(6.28319*X2)
@@ -509,7 +509,7 @@ for i in range(Ntotal):
 # Plot pressure coefficients
 valX,valY = 0.2,0.4
 xmin,xmax = min([p.xa for p in panelM]),max([p.xa for p in panelF])
-Cpmin,Cpmax = min([p.Cp for p in panelF]),max([p.Cp for p in panelM])
+Cpmin,Cpmax = min([p.Cp for p in panelM]),max([p.Cp for p in panelM])
 xStart,xEnd = xmin-valX*(xmax-xmin),xmax+valX*(xmax-xmin)
 yStart,yEnd = Cpmin-valY*(Cpmax-Cpmin),Cpmax+valY*(Cpmax-Cpmin)      
 plt.figure(figsize=(10,6))

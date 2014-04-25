@@ -7,12 +7,12 @@ from scipy import integrate
 from math import *
 import matplotlib.pyplot as plt
 
-alpha = 0       # the angle of attack from main elemnt chord line
+alpha = 5       # the angle of attack from main elemnt chord line
 AL = alpha / 57.2958     # get into radians
 
 # read of the geometry
 #coords = np.loadtxt(fname='C:/Users/llwei89/Documents/Github/AeroPython/resources/n0012.dat')
-coords = np.loadtxt(fname='/home/starson/AeroPython/resources/n0012.dat')
+coords = np.loadtxt(fname='/home/starson/AeroPython/resources/s1223.dat')
 xp,yp = coords[:,0],coords[:,1]            # read in the original airfoil
 
 # plotting the geometry
@@ -134,9 +134,9 @@ for i in range(N):
         TH1 = atan2(Y-Y1,X-X1)
         TH2 = atan2(Y-Y2,X-X2)
                 
-#        if i==j:
-#            Y = 0
-#            TH1 = 0
+        if i==j:
+            Y = 0
+            TH1 = 0
         # Compute velocity components as functions of Gamma1 and Gamma2
         # Velocity of panel j due to collocation point i 
         if(i==j):
@@ -144,8 +144,8 @@ for i in range(N):
             U2L = 0.5*X/X2
  #           W1L = -0.15916
  #           W2L = 0.15916
-            W1L = -50.
-            W2L = 50.      
+            W1L = -1.
+            W2L = 1.      
         else:
             U1L = -(Y*log(R2/R1)+X*(TH2-TH1)-X2*(TH2-TH1))/(6.28319*X2)
             U2L = (Y*log(R2/R1) + X*(TH2-TH1))/(6.28319*X2)
@@ -246,6 +246,7 @@ plt.plot([p.xc for p in panel if p.loc=='intrados'],\
 		'bo-',linewidth=1)
 plt.legend(['extrados','intrados'],'best',prop={'size':14})
 plt.plot([p.xc for p in panel],[p.Cp for p in panel],'ro',linewidth=2)
+#plt.plot([p.xc for p in panel],[p.Cp for p in panel],'o-',linewidth=1)
 plt.xlim(xStart,xEnd)
 plt.ylim(yStart,yEnd)
 plt.gca().invert_yaxis();

@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 # read of the geometry
 #coords = np.loadtxt(fname='C:/Users/llwei89/Documents/Github/AeroPython/resources/n0012.dat')
-coords = np.loadtxt(fname='/home/starson/AeroPython/resources/n0012.dat')
+coords = np.loadtxt(fname='/home/starson/AeroPython/resources/s1223.dat')
 xp,yp = coords[:,0],coords[:,1]
 
 # plotting the geometry
@@ -101,7 +101,7 @@ class Freestream:
         self.Uinf = Uinf
         self.alpha = alpha*pi/180.0
 
-Uinf = 1.0
+Uinf = 5.0
 alpha = 2.0
 freestream = Freestream(Uinf,alpha)
 
