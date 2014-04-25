@@ -7,12 +7,23 @@ from scipy import integrate
 from math import *
 import matplotlib.pyplot as plt
 
-alpha = 5       # the angle of attack from main elemnt chord line
-AL = alpha / 57.2958     # get into radians
 
+
+#Set up free stream flow
+class Freestream:
+    def __init__(self,Uinf,alpha):
+        self.Uinf = Uinf
+        self.alpha = alpha*pi/180.0
+
+Uinf = 5.0
+alpha = 0       # the angle of attack from main elemnt chord line
+AL = alpha / 57.2958    # get into radians
+
+
+freestream = Freestream(Uinf,alpha)
 # read of the geometry
 #coords = np.loadtxt(fname='C:/Users/llwei89/Documents/Github/AeroPython/resources/n0012.dat')
-coords = np.loadtxt(fname='/home/starson/AeroPython/resources/s1223.dat')
+coords = np.loadtxt(fname='/home/starson/AeroPython/resources/n0012.dat')
 xp,yp = coords[:,0],coords[:,1]            # read in the original airfoil
 
 # plotting the geometry
@@ -140,12 +151,12 @@ for i in range(N):
         # Compute velocity components as functions of Gamma1 and Gamma2
         # Velocity of panel j due to collocation point i 
         if(i==j):
-            U1L = -0.5*(X-X2)/X2
-            U2L = 0.5*X/X2
- #           W1L = -0.15916
- #           W2L = 0.15916
-            W1L = -1.
-            W2L = 1.      
+            U1L = -0.5*(X-X2)/X2*5
+            U2L = 0.5*X/X2*5
+            W1L = -0.15916*5. 
+            W2L = 0.15916 *5.
+ #           W1L = -1.
+ #           W2L = 1.      
         else:
             U1L = -(Y*log(R2/R1)+X*(TH2-TH1)-X2*(TH2-TH1))/(6.28319*X2)
             U2L = (Y*log(R2/R1) + X*(TH2-TH1))/(6.28319*X2)
@@ -153,11 +164,10 @@ for i in range(N):
             W2L = ((X2 - Y*(TH2-TH1))-X*log(R1/R2))/(6.28319*X2)   
                 
         # Transform the local velocities into global velocity function
-        U1 = U1L*cos(-TH[j]) + W1L*sin(-TH[j])
-        U2 = U2L*cos(-TH[j]) + W2L*sin(-TH[j])
-        W1 = -U1L*sin(-TH[j]) + W1L*cos(-TH[j])
-        W2 = -U2L*sin(-TH[j]) + W2L*cos(-TH[j])
-
+        U1 = U1L*cos(-TH[j]) + W1L*sin(-TH[j]) 
+        U2 = U2L*cos(-TH[j]) + W2L*sin(-TH[j]) 
+        W1 = -U1L*sin(-TH[j]) + W1L*cos(-TH[j]) 
+        W2 = -U2L*sin(-TH[j]) + W2L*cos(-TH[j]) 
             # Compute the coefficients of gamma in the influence matrix
         if (j==0):
             A[i,0] = -U1*sin(TH[i]) + W1*cos(TH[i])
@@ -175,8 +185,11 @@ for i in range(N):
             HOLDA = -U2*sin(TH[i]) + W2*cos(TH[i])
             B[i,j] = U1*cos(TH[i]) + W1*sin(TH[i]) + HOLDB
             HOLDB = U2*cos(TH[i]) + W2*sin(TH[i])
+    
                         
     A[i,NA] = cos(AL) * sin(TH[i]) - sin(AL)* cos(TH[i])
+    #A[i,NA] = -freestream.Uinf*cos(freestream.alpha-TH[i])
+
 
 A[NA-1,0] = 1
 A[NA-1,NA-1] = 1
@@ -218,17 +231,18 @@ for i in range(N):
     for j in range(NA):
         VEL = VEL + B[i,j]*G[j]
     
-    V = VEL + cos(AL)*cos(TH[i]) + sin(AL) * sin(TH[i])
+    V = VEL + (cos(AL)*cos(TH[i]) + sin(AL) * sin(TH[i]))
+    #V = VEL  -freestream.Uinf*cos(freestream.alpha-TH[i])
     CP[i] = 1 - V**2
     CL = CL -1.0*CP[i]*(cos(AL)*cos(TH[i]) + sin(AL)* sin(TH[i]))*DL[i]
 
-CP = np.transpose(CP)
+
 
 
 for i in range(N):
     panel[i].Cp = CP[i]
-    CL = CL + -1.0*CP[i]*(cos(AL)*cos(TH[i]) + sin(AL)* sin(TH[i]))*DL[i]
-
+    
+print CL
 valX,valY = 0.2,0.4
 xmin,xmax = min([p.xa for p in panel]),max([p.xa for p in panel])
 Cpmin,Cpmax = min([p.Cp for p in panel]),max([p.Cp for p in panel])
@@ -245,7 +259,7 @@ plt.plot([p.xc for p in panel if p.loc=='intrados'],\
 		[p.Cp for p in panel if p.loc=='intrados'],\
 		'bo-',linewidth=1)
 plt.legend(['extrados','intrados'],'best',prop={'size':14})
-plt.plot([p.xc for p in panel],[p.Cp for p in panel],'ro',linewidth=2)
+#plt.plot([p.xc for p in panel],[p.Cp for p in panel],'ro',linewidth=2)
 #plt.plot([p.xc for p in panel],[p.Cp for p in panel],'o-',linewidth=1)
 plt.xlim(xStart,xEnd)
 plt.ylim(yStart,yEnd)

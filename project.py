@@ -7,8 +7,8 @@ from scipy import integrate
 from math import *
 import matplotlib.pyplot as plt
 
-alpha = 5.       # the angle of attack from main elemnt chord line
-Uinf = 20.
+alpha = 2.       # the angle of attack from main elemnt chord line
+Uinf = 5.0
 
 AL = alpha / 57.2958     # get into radians
 
@@ -191,10 +191,10 @@ for i in range(Ntotal):
         # Compute velocity components as functions of Gamma1 and Gamma2
         # Velocity of panel j due to collocation point i 
                 if(i==j):
-                    U1L = -0.5*(X-X2)/X2
-                    U2L = 0.5*X/X2
-                    W1L = -Uinf
-                    W2L = Uinf
+                    U1L = -0.5*(X-X2)/X2*Uinf
+                    U2L = 0.5*X/X2*Uinf
+                    W1L = -0.15916*Uinf
+                    W2L = 0.15916*Uinf
                     
                 else:
                     U1L = -(Y*log(R2/R1)+X*(TH2-TH1)-X2*(TH2-TH1))/(6.28319*X2)
@@ -263,10 +263,10 @@ for i in range(Ntotal):
         # Compute velocity components as functions of Gamma1 and Gamm2
         # velocity of panel j due to collocation point i
                 if (i==j-1):
-                    U1L = -0.5*(X-X2)/X2
-                    U2L = 0.5*X/X2
-                    W1L = -Uinf
-                    W2L = Uinf
+                    U1L = -0.5*(X-X2)/X2*Uinf
+                    U2L = 0.5*X/X2*Uinf
+                    W1L = -0.15916*Uinf
+                    W2L = 0.15916*Uinf
                 else:
                     U1L = -(Y*log(R2/R1)+X*(TH2-TH1)-X2*(TH2-TH1))/(6.28319*X2)
                     U2L = (Y*log(R2/R1) + X*(TH2-TH1))/(6.28319*X2)
@@ -334,10 +334,10 @@ for i in range(Ntotal):
         # Compute velocity componets as function of Gamma1 and Gamma2
         # Velocity of panel j due to collocation point 1
                 if(i==j):
-                    U1L = -0.5*(X-X2)/X2
-                    U2L = 0.5*X/X2
-                    W1L = -Uinf
-                    W2L = Uinf
+                    U1L = -0.5*(X-X2)/X2*Uinf
+                    U2L = 0.5*X/X2*Uinf
+                    W1L = -0.15916*Uinf
+                    W2L = 0.15916*Uinf
                 else:
                     U1L = -(Y*log(R2/R1)+X*(TH2-TH1)-X2*(TH2-TH1))/(6.28319*X2)
                     U2L = (Y*log(R2/R1) + X*(TH2-TH1))/(6.28319*X2)
@@ -405,10 +405,10 @@ for i in range(Ntotal):
             # Compute velocity components as functions of Gamma1 and Gamma2
             # Velocity of panel j due to collocation point i 
                 if i==j-1:
-                    U1L = -0.5*(X-X2)/X2
-                    U2L = 0.5*X/X2
-                    W1L = -Uinf
-                    W2L = Uinf
+                    U1L = -0.5*(X-X2)/X2*Uinf
+                    U2L = 0.5*X/X2*Uinf
+                    W1L = -0.15916*Uinf
+                    W2L = 0.15916*Uinf
                 else:
                     U1L = -(Y*log(R2/R1) + X*(TH2-TH1) - X2*(TH2-TH1))/(6.28319*X2)
                     U2L = (Y*log(R2/R1) + X*(TH2-TH1))/(6.28319*X2)
@@ -518,13 +518,13 @@ plt.xlabel('x',fontsize=16)
 plt.ylabel('$C_p$',fontsize=16)
 plt.plot([p.xc for p in panelM if p.loc=='extrados'],\
 		[p.Cp for p in panelM if p.loc=='extrados'],\
-		'ro-',linewidth=2)
+		'ro-',linewidth=1)
 plt.plot([p.xc for p in panelM if p.loc=='intrados'],\
 		[p.Cp for p in panelM if p.loc=='intrados'],\
 		'bo-',linewidth=1)
 plt.plot([p.xc for p in panelF if p.loc=='extrados'],\
 		[p.Cp for p in panelF if p.loc=='extrados'],\
-		'ro-',linewidth=2)
+		'ro-',linewidth=1)
 plt.plot([p.xc for p in panelF if p.loc=='intrados'],\
 		[p.Cp for p in panelF if p.loc=='intrados'],\
 		'bo-',linewidth=1)
@@ -532,8 +532,9 @@ plt.legend(['extrados','intrados'],'best',prop={'size':14})
 plt.plot([p.xc for p in panelF],[p.Cp for p in panelF],'ro',linewidth=2)
 plt.xlim(xStart,xEnd)
 plt.ylim(yStart,yEnd)
-plt.gca().invert_yaxis();
+#plt.gca().invert_yaxis();
 
+print CL
 
 
 plt.show()
