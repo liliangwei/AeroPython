@@ -16,7 +16,7 @@ class Freestream:
         self.alpha = alpha*pi/180.0
 
 Uinf = 5.0
-alpha = 0       # the angle of attack from main elemnt chord line
+alpha = 2       # the angle of attack from main elemnt chord line
 AL = alpha / 57.2958    # get into radians
 
 
@@ -151,10 +151,10 @@ for i in range(N):
         # Compute velocity components as functions of Gamma1 and Gamma2
         # Velocity of panel j due to collocation point i 
         if(i==j):
-            U1L = -0.5*(X-X2)/X2*5
-            U2L = 0.5*X/X2*5
-            W1L = -0.15916*5. 
-            W2L = 0.15916 *5.
+            U1L = -0.5*(X-X2)/X2*Uinf
+            U2L = 0.5*X/X2*Uinf
+            W1L = -0.15916*Uinf
+            W2L = 0.15916 *Uinf
  #           W1L = -1.
  #           W2L = 1.      
         else:
