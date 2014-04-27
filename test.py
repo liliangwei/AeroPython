@@ -16,7 +16,7 @@ class Freestream:
         self.alpha = alpha*pi/180.0
 
 Uinf = 5.0
-alpha = 2       # the angle of attack from main elemnt chord line
+alpha = 0       # the angle of attack from main elemnt chord line
 AL = alpha / 57.2958    # get into radians
 
 
@@ -242,7 +242,6 @@ for i in range(N):
 for i in range(N):
     panel[i].Cp = CP[i]
     
-print CL
 valX,valY = 0.2,0.4
 xmin,xmax = min([p.xa for p in panel]),max([p.xa for p in panel])
 Cpmin,Cpmax = min([p.Cp for p in panel]),max([p.Cp for p in panel])

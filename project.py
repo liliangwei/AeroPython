@@ -532,9 +532,8 @@ plt.legend(['extrados','intrados'],'best',prop={'size':14})
 plt.plot([p.xc for p in panelF],[p.Cp for p in panelF],'ro',linewidth=2)
 plt.xlim(xStart,xEnd)
 plt.ylim(yStart,yEnd)
-#plt.gca().invert_yaxis();
+plt.gca().invert_yaxis();
 
-print CL
 
 
 plt.show()
