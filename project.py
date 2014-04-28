@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 alpha = 2.       # the angle of attack from main elemnt chord line
 Uinf = 5.0
 
-AL = alpha / 57.2958     # get into radians
+AL = alpha*pi/180.     # get into radians
 
 
 # read of the geometry
@@ -532,7 +532,7 @@ plt.legend(['extrados','intrados'],'best',prop={'size':14})
 plt.plot([p.xc for p in panelF],[p.Cp for p in panelF],'ro',linewidth=2)
 plt.xlim(xStart,xEnd)
 plt.ylim(yStart,yEnd)
-plt.gca().invert_yaxis();
+#plt.gca().invert_yaxis();
 
 
 

@@ -17,7 +17,7 @@ class Freestream:
 
 Uinf = 5.0
 alpha = 0       # the angle of attack from main elemnt chord line
-AL = alpha / 57.2958    # get into radians
+AL = alpha*pi/180.    # get into radians
 
 
 freestream = Freestream(Uinf,alpha)
